@@ -16,7 +16,6 @@ public class Ataque : MonoBehaviour
     {
         if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
-            Debug.Log("Hola Mundo");
             _fps.enabled = false;
             atacar();
         }

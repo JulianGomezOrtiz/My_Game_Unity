@@ -18,19 +18,9 @@ public class PirateBehaviour : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Llave") {
+        if (other.CompareTag("Llave")) {
             puntos += 1;
             Destroy(other.gameObject, 0.09f);
         }
-    }
-
-    void OnTriggerStay(Collider other)
-    {
-        Debug.Log("A collider is inside the DoorObject trigger");
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-        Debug.Log("A collider has exited the DoorObject trigger");
     }
 }

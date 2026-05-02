@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class Giro : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private AudioSource audioSource;
+
     void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         this.transform.Rotate(50f * Time.deltaTime, 50f * Time.deltaTime, 50f * Time.deltaTime);
@@ -16,8 +16,8 @@ public class Giro : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (!GetComponent<AudioSource>().isPlaying) {
-            GetComponent<AudioSource>().Play();
+        if (!audioSource.isPlaying) {
+            audioSource.Play();
         }
     }
 }

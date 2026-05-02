@@ -11,10 +11,15 @@ MemoryCaptures/
 *.csproj
 *.unityproj
 *.sln
+*.slnx
 *.user
 *.userprefs
 *.pidb
 *.booproj
+
+.vscode/
+.vs/
+.idea/
 
 *.svd
 
