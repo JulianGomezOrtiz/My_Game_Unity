@@ -11,7 +11,7 @@ public class Giro : MonoBehaviour
 
     void Update()
     {
-        this.transform.Rotate(50f * Time.deltaTime, 50f * Time.deltaTime, 50f * Time.deltaTime);
+        this.transform.Rotate(0f, 50f * Time.deltaTime, 0f);
     }
 
     private void OnTriggerEnter(Collider other)

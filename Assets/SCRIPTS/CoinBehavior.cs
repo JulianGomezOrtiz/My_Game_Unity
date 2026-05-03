@@ -29,6 +29,11 @@ public class Moneda : MonoBehaviour
 
         if (other.CompareTag("Player"))
         {
+            PirateBehaviour pirate = other.GetComponent<PirateBehaviour>();
+            if (pirate != null)
+            {
+                Debug.Log("¡Moneda recogida! Puntos: " + pirate.getPuntos());
+            }
             Destroy(gameObject);
         }
     }

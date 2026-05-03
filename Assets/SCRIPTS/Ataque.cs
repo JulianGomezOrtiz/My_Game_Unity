@@ -5,6 +5,7 @@ public class Ataque : MonoBehaviour
 {
     private Animator _animator;
     private StarterAssets.ThirdPersonController _fps;
+    private bool isAttacking = false;
 
     void Start()
     {
@@ -14,8 +15,9 @@ public class Ataque : MonoBehaviour
 
     void Update()
     {
-        if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        if (!isAttacking && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
         {
+            isAttacking = true;
             _fps.enabled = false;
             atacar();
         }
@@ -24,5 +26,12 @@ public class Ataque : MonoBehaviour
     void atacar()
     {
         _animator.SetTrigger("ataque");
+        Invoke("ReenableController", 1f);
+    }
+
+    void ReenableController()
+    {
+        _fps.enabled = true;
+        isAttacking = false;
     }
 }
