@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - Llave
   - Coin
+  - Enemigos
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - Water
   - UI
   - pp
-  - 
+  - Enemy
   - 
   - 
   - 

@@ -15,12 +15,6 @@ public class Ataque : MonoBehaviour
 
     void Update()
     {
-        if (!isAttacking && Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            isAttacking = true;
-            _fps.enabled = false;
-            atacar();
-        }
     }
 
     void atacar()

@@ -5,8 +5,7 @@ public class PauseMenuController : MonoBehaviour
 {
     public void Reanudar()
     {
-        Time.timeScale = 1f;
-        SceneManager.UnloadSceneAsync("Menu1");
+        FindObjectOfType<PauseManager>()?.CerrarMenu();
     }
 
     public void Reiniciar()

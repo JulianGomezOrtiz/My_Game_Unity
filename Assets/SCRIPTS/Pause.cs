@@ -28,7 +28,7 @@ public class PauseManager : MonoBehaviour
         isPaused = true;
     }
 
-    void CerrarMenu()
+    public void CerrarMenu()
     {
         SceneManager.UnloadSceneAsync("Menu1");
         Time.timeScale = 1f;
