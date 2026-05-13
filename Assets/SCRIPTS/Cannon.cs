@@ -7,7 +7,7 @@ public class Cannon : MonoBehaviour
     public Transform firePoint;
 
     [Header("Stats")]
-    public float fireRate = 1.5f;
+    public float fireRate = 0.6f;
     public int damage = 15;
     public float range = 40f;
     public float leadFactor = 0.5f;

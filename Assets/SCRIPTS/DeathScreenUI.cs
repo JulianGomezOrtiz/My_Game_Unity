@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class DeathScreenUI : MonoBehaviour
 {
     public TextMeshProUGUI deathText;
     public float fadeDuration = 1.5f;
+    public float menuDelay = 0.5f;
 
     private Health playerHealth;
 
@@ -46,7 +48,19 @@ public class DeathScreenUI : MonoBehaviour
     {
         if (deathText == null) return;
 
-        StartCoroutine(AnimateText());
+        StartCoroutine(DeathSequence());
+    }
+
+    System.Collections.IEnumerator DeathSequence()
+    {
+        yield return StartCoroutine(AnimateText());
+        yield return new WaitForSecondsRealtime(menuDelay);
+
+        if (!SceneManager.GetSceneByName("Menu1").isLoaded)
+        {
+            SceneManager.LoadScene("Menu1", LoadSceneMode.Additive);
+            Time.timeScale = 0f;
+        }
     }
 
     System.Collections.IEnumerator AnimateText()

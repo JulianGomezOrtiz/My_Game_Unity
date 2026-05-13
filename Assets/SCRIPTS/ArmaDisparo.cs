@@ -25,6 +25,15 @@ public class ArmaDisparo : MonoBehaviour
         }
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
-        bullet.GetComponent<Bullet>().damage = damage;
+
+        Bullet b = bullet.GetComponent<Bullet>();
+        if (b != null)
+        {
+            b.damage = damage;
+            b.speed = 50f;
+        }
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        if (rb != null) rb.useGravity = false;
     }
 }
