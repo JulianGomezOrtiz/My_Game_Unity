@@ -1,37 +1,26 @@
 # AGENTS.md
 
-Unity 6000.3.7f1 (Unity 6) 3D with URP. Scenes: `Assets/Escenas/Main.unity` (index 1, entry), `Assets/Escenas/Menu1.unity` (index 2, pause menu). Custom scripts live in `Assets/SCRIPTS/`.
+Unity 6000.3.7f1 (Unity 6) 3D + URP. Scenes: `Assets/Escenas/Main.unity` (index 1, entry), `Assets/Escenas/Menu1.unity` (index 2, pause). Custom scripts in `Assets/SCRIPTS/`. StarterAssets is an imported third-party asset, not from UPM.
 
-## Dependencies
+## Setup quirks
 
-- **StarterAssets** — `StarterAssets.ThirdPersonController` referenced by `Ataque.cs`
-- **Cinemachine**, **TextMeshPro**, **NavMesh** (`com.unity.ai.navigation`), **Unity Input System** (`com.unity.inputsystem`)
-- Input scripts read `Keyboard.current` / `Mouse.current` directly; `.inputactions` assets are NOT wired
+- `.csproj`, `.sln`, `.slnx` are gitignored — Unity regenerates them. Do not manually edit.
+- `.inputactions` assets exist but are NOT wired. Input reads `Keyboard.current` / `Mouse.current` directly.
 
 ## Tags & Layers
 
 - **Tags**: `Player`, `Llave`, `Coin`, `Enemigos`, `CinemachineTarget`
-- **Custom layers**: `Enemy` (7), `pp` (6)
-- **Light layers**: 0–7 defined for URP
+- **Layers**: `pp` (6), `Enemy` (7); rendering layers 0–7.
 
 ## Gotchas
 
-- **Class names differ from filenames** — `UnlockingChest.cs` → `Unlocking`, `CoinBehavior.cs` → `Moneda`, `Pause.cs` → `PauseManager`
-- **`Ataque.cs` bug** — `atacar()` never disables `_fps` before the attack; `ReenableController` only re-enables it. Controller is NOT actually locked during attack animation
-- **Score** — `PirateBehaviour.SetPuntos()` is the only public setter; `getPuntos()` for reads. Keys (`"Llave"` tag) auto-increment score by 1 each; 3 needed to open chest
-- **`Unlocking` (chest)** — `consumirLlaves` flag exists but is NOT wired; chest opens when `pirate.getPuntos() >= 3` and awards `puntosBonus` (default 5)
-- **`Moneda` (coin)** — rotates on Z-axis, 0.3s delay before collectible, logs but does NOT award points
-- **`Pause`** — Loads `Menu1` additively and sets `Time.timeScale = 0`; unloads on resume. `PauseMenuController` on Menu1 handles resume/restart/quit buttons
-- **`RespawnManager`** — disables `Ataque` during respawn coroutine, re-enables after teleport
-- **`AudioManager`** — singleton via public static `Instance` field; not `DontDestroyOnLoad`
-- **Save system** — `SaveSystem` uses plain JSON via `JsonUtility` at `Application.persistentDataPath`; no encryption. `SaveData` tracks `llaves` and `puntos` only
-- **`BanditDialog`** — uses E key to toggle typewriter dialog; closes panel if player walks away
-- **`ArmaDisparo`** — fires on mouse left click; sets `Bullet.damage` after instantiate
-
-## Architecture
-
-- **Health** — generic component; `Destroy(gameObject)` at 0 HP, no death animation hook
-- **NavegationPatrol** — cycles through public `puntos[]` waypoints via NavMeshAgent
-- **LedgeDetector** — stops NavMeshAgent when no ground ahead; unpause after 1s
-- **Giro** — rotates Y-axis + plays AudioSource on trigger (one-shot, no loop)
-- **NPCcontroller** — triggers `"hablar"` animator bool on player proximity
+- **Class name ≠ filename** — `UnlockingChest.cs` → `Unlocking`, `CoinBehavior.cs` → `Moneda`, `Pause.cs` → `PauseManager`
+- **`Ataque.cs` bug**: `atacar()` never disables `_fps.enabled` before the attack. `ReenableController` (Invoke 1s) only re-enables. Controller is NEVER locked during attack. A `StateMachineBehaviour` in `activarAnimaciones.cs` also tries to re-enable `ThirdPersonController.enabled` on animation exit — both are partial workarounds.
+- **Score**: `PirateBehaviour.SetPuntos()` / `getPuntos()`. `"Llave"` tag auto-adds 1 in `OnTriggerEnter`. 3 keys needed for chest.
+- **Chest** (`Unlocking`): `consumirLlaves` bool declared but **never read** — keys are not consumed. Awards `puntosBonus` (default 5) when `getPuntos() >= 3`.
+- **Coin** (`Moneda`): rotates on Z, 0.3s delay before collectible. Logs only — **does NOT award points**.
+- **Pause**: `PauseManager` loads `Menu1` additively + `Time.timeScale = 0`. `PauseMenuController.Reiniciar()` reloads active scene then unloads `Menu1` — fragile if Menu1 not loaded.
+- **`LedgeDetector`**: calls `Invoke("PickNewDestination", 1f)` every frame while hitting a ledge — can stack invocations.
+- **Unity 6 API**: `Rigidbody.linearVelocity` replaces `.velocity` (see `Bullet.cs:11`).
+- **Save system**: plain `JsonUtility` at `Application.persistentDataPath`/savegame.json, no encryption. `SaveData` tracks only `llaves` + `puntos`.
+- **`AudioManager`**: singleton via public static `Instance` field; NOT `DontDestroyOnLoad` — resets on scene change.
