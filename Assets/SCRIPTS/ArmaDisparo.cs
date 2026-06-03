@@ -31,6 +31,7 @@ public class ArmaDisparo : MonoBehaviour
         {
             b.damage = damage;
             b.speed = 50f;
+            b.owner = gameObject;
         }
 
         Rigidbody rb = bullet.GetComponent<Rigidbody>();
